@@ -1,4 +1,4 @@
-import select
+from sqlmodel import select
 from fastapi import APIRouter, HTTPException
 from psycopg2 import IntegrityError
 from src.models.resultados_model import Resultados
