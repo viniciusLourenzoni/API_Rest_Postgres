@@ -1,5 +1,7 @@
+import select
 from fastapi import APIRouter, HTTPException
 from psycopg2 import IntegrityError
+from src.models.resultados_model import Resultados
 from src.models.provas_model import Provas
 from src.config.database import get_session
 
@@ -21,3 +23,23 @@ def cria_prova(prova: Provas):
             session.rollback()
             raise HTTPException(
                 status_code=400, detail="Erro ao cadastrar prova.")
+
+
+@provas_router.delete("/{prova_id}")
+def excluir_prova(prova_id: int):
+    with get_session() as session:
+        
+        if session.exec(select(Resultados).where(Resultados.prova_id == prova_id)).first():
+            raise HTTPException(
+                status_code=400, detail="Não é possível excluir a prova com resultados associados.")
+
+        prova = session.exec(select(Provas).where(
+            Provas.id == prova_id)).first()
+        if not prova:
+            raise HTTPException(
+                status_code=404, detail="Prova não encontrada.")
+
+        session.delete(prova)
+        session.commit()
+
+        return {"message": "Prova excluída com sucesso."}

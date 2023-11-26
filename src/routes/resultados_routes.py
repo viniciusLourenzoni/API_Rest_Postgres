@@ -61,3 +61,28 @@ def obter_resultados_prova(prova_id: int):
         }
 
         return dados_resposta
+    
+    
+@resultados_router.patch("/{resultado_id}")
+def atualizar_resposta(resultado_id: int, respostas: Resultados):
+    with get_session() as session:
+        resultado = session.exec(select(Resultados).where(
+            Resultados.id == resultado_id)).first()
+        if not resultado:
+            raise HTTPException(
+                status_code=404, detail="Resultado não encontrado.")
+
+        prova = session.exec(select(Provas).where(
+            Provas.id == resultado.prova_id)).first()
+
+        for num in range(1, 11):
+            setattr(resultado, f"q{num}", getattr(respostas, f"q{num}"))
+
+        nota = sum(getattr(prova, f"q{num}") == getattr(
+            resultado, f"q{num}") for num in range(1, 11))
+        resultado.nota = nota
+
+        session.commit()
+        session.refresh(resultado)
+
+        return resultado

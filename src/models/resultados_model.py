@@ -1,8 +1,10 @@
 from typing import Optional
 
 from sqlmodel import Field, Relationship, SQLModel
+
 from src.models.provas_model import Provas
 
+ 
 class Resultados(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     nome: str

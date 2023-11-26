@@ -2,6 +2,8 @@ from typing import List
 
 from sqlmodel import Field, Relationship, SQLModel
 
+from src.models.resultados_model import Resultados
+
 
 class Provas(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
