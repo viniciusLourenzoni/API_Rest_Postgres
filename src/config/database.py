@@ -4,7 +4,7 @@ from sqlmodel import Session, SQLModel, create_engine
 PG_USERNAME = "root"
 PG_PASSWORD = "postgres"
 PG_HOST = "localhost"
-PG_PORT = 54322
+PG_PORT = 49152
 PG_DATABASE = "race_db"
 
 connect_args = {}
